@@ -33,6 +33,7 @@ public class ScalableImageView extends View {
     private float smallScale;
     private float bigScale;
     OverScroller scroller;//
+
     public ScalableImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         bitmap = Utils.getAvatar(context.getResources(), (int) IMAGE_WIDTH);
@@ -61,12 +62,11 @@ public class ScalableImageView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //移动到中间位置
         canvas.translate(offsetX, offsetY);
         float scale = smallScale + (bigScale - smallScale) * scaleFraction;
         canvas.scale(scale, scale, getWidth() / 2f, getHeight() / 2f);
         canvas.drawBitmap(bitmap, originalOffsetX, originalOffsetY, paint);
-        Log.e("ScalableImageView","传入的图片宽度大小："+IMAGE_WIDTH+"宽："+bitmap.getWidth()+",高："+bitmap.getHeight());
+        Log.e("ScalableImageView", "传入的图片宽度大小：" + IMAGE_WIDTH + "宽：" + bitmap.getWidth() + ",高：" + bitmap.getHeight());
     }
 
     public float getScaleFraction() {
@@ -126,11 +126,11 @@ public class ScalableImageView extends View {
             //手指滑动
             if (big) {
                 offsetX -= distanceX;
-                offsetX = Math.min(offsetX,(bitmap.getWidth()*bigScale - getWidth())/2);
-                offsetX = Math.max(offsetX,-(bitmap.getWidth()*bigScale - getWidth())/2);
+                offsetX = Math.min(offsetX, (bitmap.getWidth() * bigScale - getWidth()) / 2);
+                offsetX = Math.max(offsetX, -(bitmap.getWidth() * bigScale - getWidth()) / 2);
                 offsetY -= distanceY;
-                offsetY = Math.min(offsetY,(bitmap.getHeight()*bigScale - getHeight())/2);
-                offsetY = Math.max(offsetY,-(bitmap.getHeight()*bigScale - getHeight())/2);
+                offsetY = Math.min(offsetY, (bitmap.getHeight() * bigScale - getHeight()) / 2);
+                offsetY = Math.max(offsetY, -(bitmap.getHeight() * bigScale - getHeight()) / 2);
                 invalidate();
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
@@ -139,12 +139,12 @@ public class ScalableImageView extends View {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             //惯性滑动
-            if(big){
-                scroller.fling((int) offsetX,(int)offsetY,(int)velocityX,(int)velocityY,
-                        -(int)(bitmap.getWidth()*bigScale - getWidth())/2,
-                        (int)(bitmap.getWidth()*bigScale - getWidth())/2,
-                        -(int)(bitmap.getHeight()*bigScale - getHeight())/2,
-                        (int)(bitmap.getHeight()*bigScale - getHeight())/2);
+            if (big) {
+                scroller.fling((int) offsetX, (int) offsetY, (int) velocityX, (int) velocityY,
+                        -(int) (bitmap.getWidth() * bigScale - getWidth()) / 2,
+                        (int) (bitmap.getWidth() * bigScale - getWidth()) / 2,
+                        -(int) (bitmap.getHeight() * bigScale - getHeight()) / 2,
+                        (int) (bitmap.getHeight() * bigScale - getHeight()) / 2);
                 postOnAnimation(this);
             }
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -152,7 +152,7 @@ public class ScalableImageView extends View {
 
         @Override
         public void run() {
-            if(scroller.computeScrollOffset()){
+            if (scroller.computeScrollOffset()) {
                 offsetX = scroller.getCurrX();
                 offsetY = scroller.getCurrY();
                 invalidate();
